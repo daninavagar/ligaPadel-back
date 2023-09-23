@@ -1,9 +1,12 @@
 {
     "version": 2,
     "env": {
-        "PORT": 3000
+        "PORT": "3000"
     },
-    "buildCommand": "npm run build",
+    "buildCommand": "nest build",
+    "devCommand": "nest start",
+    "installCommand": "npm install",
+    "outputDirectory": "./",
     "routes": [
         {
             "src": "/(.*)",
