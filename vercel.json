@@ -3,7 +3,7 @@
     "env": {
         "PORT": "3000"
     },
-    "buildCommand": "npm run build",
+    "buildCommand": "npm run build --output public",
     "routes": [
         {
             "src": "/(.*)",
