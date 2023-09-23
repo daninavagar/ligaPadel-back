@@ -4,6 +4,7 @@
         "PORT": "3000"
     },
     "buildCommand": "npm run build --output public",
+    "outputDirectory": "build",
     "routes": [
         {
             "src": "/(.*)",
