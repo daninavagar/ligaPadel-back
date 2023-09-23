@@ -4,6 +4,10 @@
         "PORT": 3000
     },
     "buildCommand": "npm run build",
+    "build": {
+        "src": "src/main.ts",
+        "use": "@vercel/node"
+    },
     "routes": [
         {
             "src": "/(.*)",
