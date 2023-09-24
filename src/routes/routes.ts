@@ -7,6 +7,7 @@ router.get('/', (_req, res) => {
     res.status(200).send('App ok')
 })
 router.get('/teams', (_req, res) => {
+    res.header('Access-Control-Allow-Origin', '*')
     console.log('get /teams');
     
     const response = teamsController.getTeams();
