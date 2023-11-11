@@ -4,19 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const dotenv_1 = __importDefault(require("dotenv"));
 const routes_1 = __importDefault(require("./routes/routes"));
-const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("./plugins/cors"));
+const subapase_1 = __importDefault(require("./plugins/subapase"));
+dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-// app.get('/', (_req, res) => {
-//     res.status(200).send('App ok')
-// })
+app.use(cors_1.default);
+const data = subapase_1.default.from('players').select();
+console.log(data);
 app.use('/', routes_1.default);
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-// app.get('/teams', (_req, res) => {
-//   const teams:string = 'Real Madrid'
-//   res.send(teams)
-// })
