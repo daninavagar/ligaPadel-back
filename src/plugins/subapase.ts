@@ -4,8 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-const url = process.env.SUPABASE_URL || '';
-const anonkey = process.env.SUPABASE_ANON_KEY || '';
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const anonkey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 console.log('url ', url);
 console.log('anonkey ', anonkey);
