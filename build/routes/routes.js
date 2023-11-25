@@ -31,40 +31,35 @@ const teamsController = __importStar(require("../services/teamService"));
 // import connection from '../mysql/mysql'
 const router = express_1.default.Router();
 router.get('/', (_req, res) => {
-    res.status(200).send('App ok');
-});
-router.get('/players', async (_req, res) => {
-    console.log('get /bbdd');
-    const queryPlayers = await teamsController.getPlayers();
-    console.log(queryPlayers);
-    res.send(queryPlayers);
+    const result = 'App ok';
+    res.status(200).send(result);
+    console.log(result);
 });
 router.get('/teams', async (_req, res) => {
-    console.log('get /bbdd');
-    const queryTeams = await teamsController.getTeams();
-    console.log(queryTeams);
-    res.send(queryTeams);
+    console.log('get teams');
+    const teams = await teamsController.getTeams();
+    res.send(teams);
 });
-router.get('/playerByTeams', async (_req, res) => {
-    console.log('get /bbdd');
-    const queryTeams = await teamsController.getPlayerByTeams();
-    console.log(queryTeams);
-    res.send(queryTeams);
+router.get('/players', async (_req, res) => {
+    console.log('get /players');
+    const players = await teamsController.getPlayers();
+    console.log(players);
+    res.send(players);
 });
-router.get('/teams', (_req, res) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    console.log('get /teams');
-    const response = teamsController.getTeams();
-    res.send(response);
+router.get('/clasification', async (_req, res) => {
+    console.log('get /clasification');
+    const clasification = await teamsController.getClasification();
+    console.log(clasification);
+    res.send(clasification);
 });
-router.post('/player', (req, res) => {
-    console.log('post /player');
-    console.log(req.body);
-    if (!req.body) {
+router.get('/round', async (req, res) => {
+    console.log('get /rounds');
+    if (!req.query.round) {
         res.status(400).send("No send DATA");
     }
     else {
-        res.send(teamsController.setPlayer(req.body.name));
+        const rounds = await teamsController.getRound(req.query.round.toString());
+        res.send(rounds);
     }
 });
 exports.default = router;
