@@ -5,42 +5,39 @@ import * as teamsController from '../services/teamService'
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-    res.status(200).send('App ok')
-})
-
-router.get('/players', async (_req, res) => {
-    console.log('get /bbdd');
-    const queryPlayers = await teamsController.getPlayers();
-    console.log(queryPlayers);
-    res.send(queryPlayers)
-})
-
-router.get('/playerByTeams', async (_req, res) => {
-    console.log('get /bbdd');
-    const queryTeams = await teamsController.getPlayerByTeams();
-    console.log(queryTeams);
-    res.send(queryTeams)
+    const result = 'App ok'
+    res.status(200).send(result)
+    console.log(result);
 })
 
 router.get('/teams', async (_req, res) => {
-    res.header('Access-Control-Allow-Origin', '*')
     console.log('get teams');
-    const result = await teamsController.getTeams();
-    res.send(result);
-    
+    const teams = await teamsController.getTeams();
+    res.send(teams);  
 })
 
-router.post('/player', (req, res) => {
-    console.log('post /player');
-    
-    console.log(req.body);
-    
-    if(!req.body) {
+router.get('/players', async (_req, res) => {
+    console.log('get /players');
+    const players = await teamsController.getPlayers();
+    console.log(players);
+    res.send(players)
+})
+
+router.get('/clasification', async (_req, res) => {
+    console.log('get /clasification');
+    const clasification = await teamsController.getClasification();
+    console.log(clasification);
+    res.send(clasification)
+})
+
+router.get('/round', async (req, res) => {
+    console.log('get /rounds');
+    if (!req.query.round) {
         res.status(400).send("No send DATA")
     } else {
-        res.send(teamsController.setPlayer(req.body.name))
+        const rounds = await teamsController.getRound(req.query.round.toString());
+        res.send(rounds)
     }
-    
-})
+}) 
 
 export default router;
