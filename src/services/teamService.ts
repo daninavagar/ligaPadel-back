@@ -1,102 +1,93 @@
-import http from "../plugins/axios"
-import constant from "../constant"
+import getAuth from "../auth/index"
 
 
 export const getTeams = async () => {
 
-    const sheetName = '/Equipos'
+    const sheetName = 'Equipos'
 
-    const options = {
-        method: 'GET',
-        url: constant.URL_SHEETS + sheetName,
-    }
+    const result = await getAuth(sheetName)
 
-    let result = '' 
-    await http.request(options)
-        .then((response) => {
-            result = response.data
-        }).catch((error => {
-            console.error(error)
-        }))
-
-    console.log(result);
-    return result
+    result.values?.shift()
+    const resultTransformed = result.values?.map((team:any) => {
+        return {
+            EQUIPOS: team[0]
+        }
+    })
+    return resultTransformed
 
 }
 
 export const getPlayers = async () => {
     
-        const sheetName = '/Jugadores'
+        const sheetName = 'Jugadores'
     
-        const options = {
-            method: 'GET',
-            url: constant.URL_SHEETS + sheetName,
-        }
-    
-        let result = '' 
-        await http.request(options)
-            .then((response) => {
-                result = response.data
-            }).catch((error => {
-                console.error(error)
-            }))
-    
-        console.log(result);
-        return result
+        const result = await getAuth(sheetName)
+
+        result.values?.shift()
+        const resultTransformed = result.values?.map((team:any) => {
+            return {
+                JUGADORES: team[0],
+                EQUIPOS: team[1],
+                CAPITAN: team[2]
+            }
+        })
+
+        return resultTransformed
 }
 
 export const getClasification = async () => {
-    const sheetName = '/Clasificación'
+    const sheetName = 'Clasificación';
 
-    const options = {
-        method: 'GET',
-        url: constant.URL_SHEETS + sheetName,
-    }
+    const values = (await getAuth(sheetName)).values;
 
-    let result = '' 
-    await http.request(options)
-        .then((response) => {
-            result = response.data
-        }).catch((error => {
-            console.error(error)
-        }))
+    let headers = values![0];
 
-    console.log(result);
-    return result
+    let resultNoSpaces = values!.slice(1).map(row => {
+        let obj: { [key: string]: any } = {}; // Add type annotation for obj
+        headers.forEach((header, index) => {
+            if (header !== "") {
+                obj[header] = row[index];
+            }
+        });
+        return obj;
+    });
+
+    return resultNoSpaces
 }
 
 export const getRound = async (roundParameter: string) => {
-    const sheetName = roundParameter
+    const sheetName = roundParameter + '!A1:C15'
 
-    const options = {
-        method: 'GET',
-        url: constant.URL_SHEETS + `/${sheetName}`,
-    }
+    const result = (await getAuth(sheetName)).values
+    result?.splice(3, 1);
+    result?.splice(6, 1);
+    result?.splice(9, 1);
+    
+  let resultsRound = [];
 
-    let result = null 
-    await http.request(options)
-        .then((response) => {
-            result = response.data
-            result = result.map((item:any) => {
-                for (let i = 3; i <= 10; i++) {
-                    delete item[i.toString()]
-                }
-                return item
-            });
-            let partidos = []
-            let partidoNum = 1
-            for (let i = 0; i < result.length; i += 2) {
-                if (result[i].EQUIPOS && result[i+1].EQUIPOS) {
-                    let partido = {
-                        [`Partido ${partidoNum}`]: [result[i], result[i+1]]
-                    };
-                    partidos.push(partido)
-                    partidoNum++
-                }
-            }
-            result = partidos;
-        }).catch((error => {
-            console.error(error)
-        }))
-    return result
+    // let partido = {};
+
+    for (let i = 1; i < result!.length; i += 3) {
+    const partidoNumber = (i + 2) / 3;
+    let partido: { [key: string]: any } = {}; // Define the type of partido
+    partido[`Partido ${partidoNumber}` as keyof typeof partido] = [
+        {
+            EQUIPOS: result![i][0],
+            'JUEGOS GANADOS': result![i][1],
+            PUNTOS: result![i][2]
+        },
+        {
+            EQUIPOS: result![i + 1][0],
+            'JUEGOS GANADOS': result![i + 1][1],
+            PUNTOS: result![i + 1][2]
+        }
+    ] as { [key: string]: any }[];
+    resultsRound.push(partido);
+    partido = {};
+}
+
+
+
+
+    return resultsRound
 }

@@ -1,6 +1,5 @@
 import express from 'express'
 import * as teamsController from '../services/teamService'
-// import connection from '../mysql/mysql'
 
 const router = express.Router();
 
